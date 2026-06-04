@@ -223,7 +223,7 @@ def load_data():
     for key, fid in FILE_IDS.items():
         output = f"/tmp/{key}.csv"
         if not os.path.exists(output):
-            gdown.download(id=fid, output=output, quiet=True, fuzzy=True)
+            gdown.download(id=fid, output=output, quiet=True)
         data[key] = pd.read_csv(output, low_memory=False)
 
     orders      = data["orders"]
@@ -1074,4 +1074,5 @@ elif page == "ML Prediction Model":
                 <div style='font-family: Syne, sans-serif; font-size: 0.9rem; font-weight: 700; color: #F0F0F0; margin-bottom: 0.5rem;'>{title}</div>
                 <div style='font-family: DM Mono, monospace; font-size: 0.72rem; color: #6C757D; line-height: 1.7;'>{body}</div>
             </div>""", unsafe_allow_html=True)
+
 
