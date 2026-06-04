@@ -204,11 +204,11 @@ def chart_layout(**kw):
     return base
 
 # ── Data loading ───────────────────────────────────────────────────────────────
-def gdrive_url(file_id):
-    return f"https://drive.google.com/uc?export=download&id={file_id}"
-
 @st.cache_data(show_spinner=False)
 def load_data():
+    import gdown
+    import os
+
     FILE_IDS = {
         "orders":      "138GX-CCP8UGHUMWhRo6Fms0FOdqg-Kft",
         "reviews":     "1GW2-GtnONv9XW2FTV-ARZTWPKmS5JNu5",
@@ -221,7 +221,10 @@ def load_data():
     }
     data = {}
     for key, fid in FILE_IDS.items():
-        data[key] = pd.read_csv(gdrive_url(fid))
+        output = f"/tmp/{key}.csv"
+        if not os.path.exists(output):
+            gdown.download(id=fid, output=output, quiet=True, fuzzy=True)
+        data[key] = pd.read_csv(output, low_memory=False)
 
     orders      = data["orders"]
     reviews     = data["reviews"]
@@ -1071,3 +1074,4 @@ elif page == "ML Prediction Model":
                 <div style='font-family: Syne, sans-serif; font-size: 0.9rem; font-weight: 700; color: #F0F0F0; margin-bottom: 0.5rem;'>{title}</div>
                 <div style='font-family: DM Mono, monospace; font-size: 0.72rem; color: #6C757D; line-height: 1.7;'>{body}</div>
             </div>""", unsafe_allow_html=True)
+
